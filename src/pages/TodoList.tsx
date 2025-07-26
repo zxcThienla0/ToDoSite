@@ -65,7 +65,7 @@ export const TodoList = () => {
                                     placeholder="Введите текст задачи..."
                                 />
                             </div>
-                            <button 
+                            <button
                                 onClick={handleAddTodo}
                                 className="py-3 px-9 text-1xl rounded-md bg-[#1B7DFF] ml-5 mb-5 text-white cursor-pointer"
                             >
@@ -86,16 +86,10 @@ export const TodoList = () => {
                                 todos.map(todo => (
                                     <div
                                         key={todo.id}
-                                        className="flex mb-3 border-[#81818189] border-1"
+                                        className="flex mb-3 border-[#81818189] border-1 items-center"
                                     >
                                         <span
-                                            style={{
-                                                flex: 1,
-                                                textDecoration: todo.completed ? 'line-through' : 'none',
-                                                color: todo.completed ? '#666' : 'black',
-                                                paddingLeft: '5px',
-                                                paddingTop: '2px'
-                                            }}
+                                            className={`flex-1 pl-1  pt-0.5 ${todo.completed ? 'text-gray-500 line-through' : 'text-black'} break-words`}
                                         >
                                             {todo.title}
                                         </span>
@@ -117,10 +111,10 @@ export const TodoList = () => {
                         </div>
                     </div>
                 </div>
-                
+
                 {todos.length > 0 && (
                     <div className="mt-4 text-sm text-gray-600">
-                        Всего задач: {todos.length} | 
+                        Всего задач: {todos.length} |
                         Выполнено: {todos.filter(t => t.completed).length}
                     </div>
                 )}

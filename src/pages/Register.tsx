@@ -31,7 +31,7 @@ export const Register = () => {
 
     return (
         <>
-            <section className="m-auto w-200 ">
+            <section className="m-auto max-w-200 ">
                 <div className="pt-3 pb-3 mt-10 bg-[#e1e1e1] border-1 border-[#81818189] rounded-xl">
                     <h1 className="flex justify-center ">Регистрация</h1>
                     <form onSubmit={handleSubmit} className="mt-5 px-5">
