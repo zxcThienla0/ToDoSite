@@ -1,12 +1,14 @@
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import "./index.css"
 
+import { useUserTodos } from "./firebase/useUserTodo";
+
 import { Login } from './pages/Login';
 import { Register } from './pages/Register';
 import { TodoList } from './pages/TodoList';
 
 function App() {
-
+  const { user, exitUser } = useUserTodos()
   return (
     <>
       <Router>
@@ -17,8 +19,24 @@ function App() {
                 <li><Link to="/" className="hover:underline">Главная</Link></li>
               </ul>
               <ul className="flex w-auto">
-                <li><Link to="/Register" className="hover:underline">Регистрация</Link></li>
-                <li><Link to="/signUp" className="hover:underline ml-2.5">Войти</Link></li>
+                {!user ? (
+                  <>
+                    <li><Link to="/Register" className="hover:underline pr-5">Регистрация</Link></li>
+                    <li><Link to="/signUp" className="hover:underline">Войти</Link></li>
+                  </>
+                ) : (
+                  <>
+                    <li className="pr-5">{user.email}</li>
+                    <li>
+                      <button
+                        onClick={exitUser}
+                        className="hover:underline text-sm cursor-pointer"
+                      >
+                        Выйти
+                      </button>
+                    </li>
+                  </>
+                )}
               </ul>
             </nav>
           </div>

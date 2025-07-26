@@ -1,51 +1,40 @@
-import { useState, useEffect } from "react"
-import NotOkey from "../img/cross.svg"
-import Okey from "../img/tick.svg"
-
-interface Todo {
-    id: number;
-    title: string;
-    completed: boolean;
-}
+import { useState } from "react";
+import NotOkey from "../img/cross.svg";
+import Okey from "../img/tick.svg";
+import { useUserTodos } from "../firebase/useUserTodo";
 
 export const TodoList = () => {
-    const [todos, setTodos] = useState<Todo[]>(() => {
-        const savedTodos = localStorage.getItem('todos');
-        return savedTodos ? JSON.parse(savedTodos) : [];
-    });
     const [inputValue, setInputValue] = useState('');
+    const { todos, loading, addTodo, toggleTodo, removeTodo, user } = useUserTodos();
 
-    useEffect(() => {
-        sessionStorage.setItem('todos', JSON.stringify(todos));
+    if (!user) {
+        return (
+            <section className="container">
+                <div className="text-center py-10">
+                    <h2 className="text-2xl mb-4">Войдите в аккаунт</h2>
+                    <p>Чтобы использовать список задач</p>
+                </div>
+            </section>
+        );
+    }
 
-    }, [todos]);
-
-    const addTodo = () => {
+    const handleAddTodo = () => {
         if (inputValue.trim()) {
-            const newTodo: Todo = {
-                id: Date.now(),
-                title: inputValue,
-                completed: false
-            };
-            setTodos(prev => [...prev, newTodo]);
+            addTodo(inputValue);
             setInputValue('');
         }
     };
 
-    const deleteTodo = (id: number) => {
-        setTodos(prev => prev.filter(todo => todo.id !== id));
-    };
-
-    const toggleTodo = (id: number) => {
-        setTodos(prev =>
-            prev.map(todo => {
-                if (todo.id === id) {
-                    return { ...todo, completed: !todo.completed };
-                }
-                return todo;
-            })
+    if (loading) {
+        return (
+            <section className="container">
+                <div className="flex justify-center items-center h-64">
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+                </div>
+            </section>
         );
-    };
+    }
+
     return (
         <>
             <section className="container">
@@ -59,10 +48,9 @@ export const TodoList = () => {
                             <div className="p-5">
                                 <input
                                     type="text"
-                                    id="todo"
                                     value={inputValue}
                                     onChange={(e) => setInputValue(e.target.value)}
-                                    onKeyDown={(e) => e.key === 'Enter' && addTodo()}
+                                    onKeyDown={(e) => e.key === 'Enter' && handleAddTodo()}
                                     className="
                                     px-4 py-3
                                     border-2 border-[#81818189]
@@ -77,7 +65,12 @@ export const TodoList = () => {
                                     placeholder="Введите текст задачи..."
                                 />
                             </div>
-                            <button onClick={addTodo} className="py-3 px-9 text-1xl rounded-md bg-[#1B7DFF] ml-5 mb-5 text-white">Добавить</button>
+                            <button 
+                                onClick={handleAddTodo}
+                                className="py-3 px-9 text-1xl rounded-md bg-[#1B7DFF] ml-5 mb-5 text-white cursor-pointer"
+                            >
+                                Добавить
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -107,16 +100,16 @@ export const TodoList = () => {
                                             {todo.title}
                                         </span>
                                         <button
-                                            onClick={() => toggleTodo(todo.id)}
+                                            onClick={() => toggleTodo(todo.id, !todo.completed)}
                                             className="flex text-white w-[30px] h-[30px] bg-[#c9c9c989] items-center justify-center cursor-pointer text-[16px] "
                                         >
                                             <img src={Okey} alt="Accept" className="w-[20px] h-[20px]" />
                                         </button>
                                         <button
-                                            onClick={() => deleteTodo(todo.id)}
+                                            onClick={() => removeTodo(todo.id)}
                                             className="flex w-[30px] h-[30px] bg-[#c9c9c989] items-center justify-center cursor-pointer text-[16px] ml-1"
                                         >
-                                            <img src={NotOkey} alt="Delite" className="w-[20px] h-[20px]" />
+                                            <img src={NotOkey} alt="Delete" className="w-[20px] h-[20px]" />
                                         </button>
                                     </div>
                                 ))
@@ -124,6 +117,13 @@ export const TodoList = () => {
                         </div>
                     </div>
                 </div>
+                
+                {todos.length > 0 && (
+                    <div className="mt-4 text-sm text-gray-600">
+                        Всего задач: {todos.length} | 
+                        Выполнено: {todos.filter(t => t.completed).length}
+                    </div>
+                )}
             </section>
         </>
     )

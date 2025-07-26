@@ -14,6 +14,14 @@ a:hover{
   opacity: 0.6;
 }
 
+button{
+  text-decoration: none;
+  transition: all, 0.2s;
+}
+button:hover{
+  opacity: 0.6;
+}
+
 :root {
   font-family: "Lato", sans-serif;
   line-height: 1.5;
