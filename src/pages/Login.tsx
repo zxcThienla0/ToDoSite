@@ -9,7 +9,7 @@ export const Login = () => {
     const [error, setError] = useState(false);
     const [success, setSuccess] = useState('');
     const [loading, setLoading] = useState(false);
-    const { user, exitUser } = useUserTodos()
+    const { user, } = useUserTodos()
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();

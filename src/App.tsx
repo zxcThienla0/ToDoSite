@@ -9,10 +9,13 @@ import { TodoList } from './pages/TodoList';
 
 function App() {
   const { user, exitUser } = useUserTodos()
+  const basename = process.env.NODE_ENV === 'production'
+    ? '/ToDoSite' 
+    : '';
   return (
     <>
-      <Router>
-        <div >
+      <Router basename={basename}>
+        <div>
           <div className="bg-gray-500 text-white p-4">
             <nav className='container  flex justify-between'>
               <ul className="flex space-x-4">
